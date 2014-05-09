@@ -690,7 +690,6 @@ class CalDAVClient {
                                          ,'http://calendarserver.org/ns/:calendar-proxy-read'
                                          ,'http://calendarserver.org/ns/:calendar-proxy-read-for'
 					 ), 1);
-
     $calendars = array();
     if ( isset($this->xmltags['urn:ietf:params:xml:ns:caldav:calendar']) ) {
       $calendar_urls = array();
