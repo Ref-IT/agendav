@@ -223,7 +223,7 @@ class CURLCalDAVClient extends CalDAVClient {
 		if ($url === null)
 			$url = $this->calendar_home_set[0];
 		$this->DoPROPFINDRequest( $url, $properties, 1);
-		return $this->parse_calendar_info( ! $recursed, $url );
+		return $this->parse_calendar_info( ! $recursed );
 	}
 
 	/**
@@ -240,13 +240,14 @@ class CURLCalDAVClient extends CalDAVClient {
 				 );
 		$this->DoPROPFINDRequest($url, $properties, 0);
 
-		return $this->parse_calendar_info( false, $url );
+		return $this->parse_calendar_info( false );
 	}
 
 	/**
 	 * Get calendar info after a PROPFIND
 	 */
-	function parse_calendar_info( $recurse, $url ) {
+	function parse_calendar_info( $recurse ) {
+
 		$calendars = array();
 		if ( isset($this->xmltags['urn:ietf:params:xml:ns:caldav:calendar']) ) {
 			$calendar_urls = array();
