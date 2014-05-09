@@ -317,7 +317,6 @@ class CURLCalDAVClient extends CalDAVClient {
 				$href = $this->xmlnodes[$hnode]['value'];
 
 				if ( !isset($calendar_urls[$href]) ) continue;
-				if ( $href == $url ) continue;
 				$query_urls[] = $href;
 			}
 			foreach (array_unique ($query_urls) as $i => $href) {
