@@ -7,7 +7,7 @@
 set_time_limit(0);
 $compilers = array(
 		'compiler.jar' =>
-			'http://closure-compiler.googlecode.com/files/compiler-latest.zip',
+			'http://dl.google.com/closure-compiler/compiler-latest.zip',
 		'yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar' =>
 			'http://yui.zenfs.com/releases/yuicompressor/yuicompressor-2.4.7.zip'
 		);
