@@ -91,6 +91,10 @@ class Calendar extends CI_Controller {
 	 * Creates a calendar
 	 */
 	function create() {
+		// We do not want this.
+		$this->_throw_exception('Das Anlegen von Kalendern ist nicht gestattet.');
+		return;
+
 		$displayname = $this->input->post('displayname', TRUE);
 		$calendar_color = $this->input->post('calendar_color', TRUE);
 
@@ -144,6 +148,9 @@ class Calendar extends CI_Controller {
 	 * Deletes a calendar
 	 */
 	function delete() {
+		// We do not want this.
+		$this->_throw_exception('Das dauerhafte Löschen von Kalender ist nicht gestattet.');
+		return;
 		$calendar = $this->input->post('calendar');
 		if ($calendar === FALSE) {
 			$this->extended_logs->message('ERROR', 
