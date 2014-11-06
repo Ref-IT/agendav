@@ -850,55 +850,6 @@ var calendar_modify_form = function calendar_modify_form(calendar_obj) {
 	var buttons_and_actions = 
 		[
 			{
-				'text': _('labels', 'deletecalendar'),
-				'class': 'addicon btn-icon-calendar-delete',
-				'click': function() { 
-					destroy_dialog(mcd);
-					load_generated_dialog('dialog_generator/delete_calendar',
-						{
-							calendar: $(calendar_obj).data().calendar,
-							displayname: $(calendar_obj).data().displayname
-						},
-						function() {},
-						_('labels', 'delete'),
-						[ 
-						{
-							'text': _('labels', 'yes'),
-							'class': 'addicon btn-icon-calendar-delete',
-							'click': function() {
-								var thisform = $('#delete_calendar_form');
-								proceed_send_ajax_form(thisform,
-										function(removed_calendar) {
-											// Just remove deleted calendar
-											$('.calendar_list li.available_calendar').each(function(index) {
-												var thiscal = $(this).data();
-												if (thiscal.calendar == removed_calendar) {
-													$('#calendar_view').fullCalendar('removeEventSource', thiscal.eventsource);
-													$(this).remove();
-													return false; // stop looking for calendar
-												}
-											});
-										},
-										function(data) {
-											show_error(_('messages', 'error_caldelete'), data);
-										},
-										function() {}); 
-
-								// Destroy dialog
-								destroy_dialog(dcd);
-
-							}
-						},
-						{
-							'text': _('labels', 'cancel'),
-							'class': 'addicon btn-icon-cancel',
-							'click': function() { destroy_dialog(dcd); }
-						}
-					],
-					'delete_calendar_dialog', 500);
-				}
-			},
-			{
 				'text': _('labels', 'save'),
 				'class': 'addicon btn-icon-calendar-edit',
 				'click': function() {
