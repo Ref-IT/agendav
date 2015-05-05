@@ -737,6 +737,39 @@ class CalDAVClient {
   /*
    * Find own calendars
    */
+
+function rel2abs($rel, $base)
+{
+    /* return if already absolute URL */
+    if (parse_url($rel, PHP_URL_SCHEME) != '') return $rel;
+
+    /* queries and anchors */
+    if ($rel[0]=='#' || $rel[0]=='?') return $base.$rel;
+
+    /* parse base URL and convert to local variables:
+       $scheme, $host, $path */
+    extract(parse_url($base));
+
+    /* remove non-directory element from path */
+    $path = preg_replace('#/[^/]*$#', '', $path);
+
+    /* destroy path if relative url points to root */
+    if ($rel[0] == '/') $path = '';
+
+    /* dirty absolute URL // with port number if exists */
+    if (parse_url($base, PHP_URL_PORT) != ''){
+        $abs = "$host:".parse_url($base, PHP_URL_PORT)."$path/$rel";
+    }else{
+        $abs = "$host$path/$rel";
+    }
+    /* replace '//' or '/./' or '/foo/../' with '/' */
+    $re = array('#(/\.?/)#', '#/(?!\.\.)[^/]+/\.\./#');
+    for($n=1; $n>0; $abs=preg_replace($re, '/', $abs, -1, $n)) {}
+
+    /* absolute URL is ready! */
+    return $scheme.'://'.$abs;
+}
+
   function FindCalendars( $recursed=false ) {
       if ( !isset($this->calendar_home_set[0]) ) {
           $this->FindCalendarHome();
@@ -750,8 +783,27 @@ class CalDAVClient {
                   'http://apple.com/ns/ical/:calendar-order',
                );
       $this->DoPROPFINDRequest( $this->calendar_home_set[0], $properties, 1);
+      $calendars = $this->parse_calendar_info();
 
-      return $this->parse_calendar_info();
+      $propertiesProxy = 
+          array(
+                  'http://calendarserver.org/ns/:calendar-proxy-write-for',
+                  'http://calendarserver.org/ns/:calendar-proxy-write',
+                  'http://calendarserver.org/ns/:calendar-proxy-read-for',
+                  'http://calendarserver.org/ns/:calendar-proxy-read',
+               );
+      $r = $this->DoPROPFINDRequest( $this->calendar_home_set[0], $propertiesProxy, 1);
+      $otherCals = $this->parse_calendar_proxy_info();
+
+      foreach (array_keys($otherCals) as $uri) {
+           $uri = $this->rel2abs($uri, $this->full_url);
+           $r = $this->DoPROPFINDRequest( $uri, $properties, 1);
+           $thisCals = $this->parse_calendar_info(true);
+           foreach ($thisCals as $k => $v)
+               $calendars[$k] = $v;
+      }
+
+      return $calendars;
   }
 
   /**
@@ -1102,6 +1154,18 @@ EOFILTER;
 
       return $calendars;
   }
+
+  function parse_calendar_proxy_info() {
+      $calendar_urls = array();
+      $calendar_proxy_urls = array();
+      if ( isset($this->xmltags['http://calendarserver.org/ns/:calendar-proxy-write']) ) {
+          foreach( $this->xmltags['http://calendarserver.org/ns/:calendar-proxy-write'] AS $k => $v) {
+              $calendar_proxy_urls[$this->HrefForProp('http://calendarserver.org/ns/:calendar-proxy-write', $k)] = 1;
+          }
+      }
+      return $calendar_proxy_urls;
+  }
+
   /**
    * Issues a PROPPATCH on a resource
    *
