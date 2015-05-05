@@ -153,6 +153,10 @@ class Calendar extends CI_Controller {
      * Deletes a calendar
      */
     function delete() {
+	// We do not want this.
+	$this->_throw_exception('Das dauerhafte Löschen von Kalender ist nicht gestattet.');
+	return;
+
         $calendar = $this->input->post('calendar');
         if ($calendar === FALSE) {
             $this->extended_logs->message('ERROR', 

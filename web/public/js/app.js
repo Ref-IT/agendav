@@ -943,13 +943,6 @@ var calendar_modify_dialog = function calendar_modify_dialog(calendar_obj) {
   var buttons_and_actions = 
     [
       {
-        'text': t('labels', 'deletecalendar'),
-        'class': 'addicon btn-icon-calendar-delete',
-        'click': function() {
-          calendar_delete_dialog(calendar_obj);
-        }
-      },
-      {
         'text': t('labels', 'save'),
         'class': 'addicon btn-icon-calendar-edit',
         'click': function() {
