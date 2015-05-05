@@ -286,11 +286,6 @@ class Icshelper {
 
             $this_event['expanded'] = TRUE;
 
-            // Format depends on DTSTART
-            if (!isset($dtstart['property']['value']['hour'])) {
-                $current_dtstart[1] .= ' 00:00:00';
-            }
-
             // Keep a copy
             $orig_start = clone $start;
 
@@ -299,10 +294,6 @@ class Icshelper {
 
             $current_dtend = $vevent->getProperty('x-current-dtend');
             if ($current_dtend !== FALSE) {
-                if (!isset($dtstart['property']['value']['hour'])) {
-                    $current_dtend[1] .= ' 00:00:00';
-                }
-
                 $orig_end = clone $end;
                 $end =
                     $this->CI->dates->x_current2datetime($current_dtend[1],
